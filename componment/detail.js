@@ -2,11 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Platform, StyleSheet, Text, View,Image } from 'react-native';
 
-export default function MovieList () {
+export default function Detail (props) {
+
+    const movie = props.navigation.getParam('movie')
 
     return (
         <View >
-            <Text>Details</Text>
+            <Text>Details about {movie.title} </Text>
         </View>
     );
 }

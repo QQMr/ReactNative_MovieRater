@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Platform, StyleSheet, Text, View,Image } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function MovieList () {
+export default function MovieList (props) {
 
     //const [movies, setMovies] = useState([{id:100,title: "Rambo"},{id:200,title: "Predator"}]);
     const [movies, setMovies] = useState([]);
@@ -22,6 +23,10 @@ export default function MovieList () {
         .catch(error => console.log(error))
     },[])
     
+    const movieclicked = (movie) =>{
+        props.navigation.navigate('Detail',{movie: movie})
+    }
+
     return (
         <View >
             <Image source={require("../assets/MR_Log.png")}
@@ -31,9 +36,11 @@ export default function MovieList () {
             <FlatList
                 data ={movies}
                 renderItem = { ({item}) => (
-                    <View style={styles.item}>
-                        <Text style={styles.itemText}>{item.title}</Text>
-                    </View>
+                    <TouchableOpacity onPress={ () => movieclicked(item) }>
+                        <View style={styles.item}>
+                            <Text style={styles.itemText}>{item.title}</Text>
+                        </View>
+                    </TouchableOpacity>
                 ) }
                 keyExtractor  ={(item) => item.id.toString()}
             />
