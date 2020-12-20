@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, View,Image } from 'react-native';
 
 export default function MovieList () {
 
@@ -23,14 +23,17 @@ export default function MovieList () {
     },[])
     
     return (
-        <View style={styles.container}>
-            <Text>QQ2</Text>
-            <Text>QQ</Text>
-            <Text>QQ2</Text>
+        <View >
+            <Image source={require("../assets/MR_Log.png")}
+            style = {{width:'100%',height: 135, paddingTop: 200}}
+            resizeMode ="contain"
+            />
             <FlatList
                 data ={movies}
                 renderItem = { ({item}) => (
-                    <Text >{item.title}</Text>
+                    <View style={styles.item}>
+                        <Text style={styles.itemText}>{item.title}</Text>
+                    </View>
                 ) }
                 keyExtractor  ={(item) => item.id.toString()}
             />
@@ -46,4 +49,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  item:{
+    flex: 10,
+    padding: 10,
+    height: 50,
+    backgroundColor:"#282c35"
+  },
+  itemText:{
+    color: "#fff",
+    fontSize: 24
+  }
 });
