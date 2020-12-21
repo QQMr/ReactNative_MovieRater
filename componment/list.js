@@ -24,7 +24,7 @@ export default function MovieList (props) {
     },[])
     
     const movieclicked = (movie) =>{
-        props.navigation.navigate('Detail',{movie: movie})
+        props.navigation.navigate('Detail',{movie: movie,title:movie.title})
     }
 
     return (
