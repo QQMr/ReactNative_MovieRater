@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, View,Image } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, View,Image, Button } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 
@@ -10,7 +10,6 @@ export default function Detail (props) {
 
     return (
         <View style={styles.container}>
-            <Text>{movie.title} </Text>
             <View style={styles.starConatiner}>
                 <FontAwesomeIcon style={movie.avg_rating > 0? styles.orange : styles.white} icon={faStar}/>
                 <FontAwesomeIcon style={movie.avg_rating > 1? styles.orange : styles.white} icon={faStar}/>
@@ -33,6 +32,13 @@ Detail.navigationOptions = screenProps => (
   headerTitleStyle:{
     fontWeight: "bold",
     fontSize: 24,
+  },
+  headerRight: () => {
+    return(
+      <Button title="Edit" color="#841584" 
+      onPress = {()=> screenProps.navigation.navigate("Edit",{movie: screenProps.navigation.getParam("movie")})}
+      />
+    )
   }
 })
 
