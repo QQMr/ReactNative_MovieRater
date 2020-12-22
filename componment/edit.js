@@ -12,7 +12,26 @@ export default function Edit (props) {
     const [description, setDescription] = useState(movie.description)
 
     const saveMovie = () =>{
-      props.navigation.goBack();
+      
+      const djangoUrls = (Platform.OS == "android" ? 
+      `http://10.0.2.2:8000/api/movies/${movie.id}/`
+      :`http://127.0.0.1:8000/api/movies/${movie.id}/`);
+      fetch(djangoUrls,{
+        method: 'PUT',
+        headers: {
+          'Authorization': `Token 00899e358115a9ecd55a2fec3a88b74c28ed6076`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({title: title, description: description})
+      })
+      .then( res=> res.json() )
+      .then( movie => {
+        console.log(movie);
+        props.navigation.navigate('Detail',{movie: movie,title:movie.title})
+      })
+      .catch(error => console.log(error))
+
+      //props.navigation.goBack();
     };
 
     return (
