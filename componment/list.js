@@ -10,8 +10,8 @@ export default function MovieList (props) {
 
     useEffect(()=>{
         const djangoUrls = (Platform.OS == "android" ? 
-                            'http://10.0.2.2:8000/api/movies/'
-                            :'http://127.0.0.1:8000/api/movies/');
+                            'http://192.168.0.101:8000/api/movies/'
+                            :'http://192.168.0.101:8000/api/movies/');
         fetch(djangoUrls,{
             method: 'GET',
             headers: {

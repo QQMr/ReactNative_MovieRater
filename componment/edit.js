@@ -14,8 +14,8 @@ export default function Edit (props) {
     const saveMovie = () =>{
       
       const djangoUrls = (Platform.OS == "android" ? 
-      `http://10.0.2.2:8000/api/movies/${movie.id}/`
-      :`http://127.0.0.1:8000/api/movies/${movie.id}/`);
+      `http://192.168.0.101:8000/api/movies/${movie.id}/`
+      :`http://192.168.0.101:8000/api/movies/${movie.id}/`);
       fetch(djangoUrls,{
         method: 'PUT',
         headers: {
