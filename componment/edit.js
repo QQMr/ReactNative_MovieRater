@@ -3,14 +3,35 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, Platform, StyleSheet, Text, View,Image, Button } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { TextInput } from 'react-native-gesture-handler';
 
 export default function Edit (props) {
 
     const movie = props.navigation.getParam('movie')
+    const [title, setTitle] = useState(movie.title)
+    const [description, setDescription] = useState(movie.description)
+
+    const saveMovie = () =>{
+      props.navigation.goBack();
+    };
 
     return (
         <View style={styles.container}>            
-            <Text style={styles.description}>Edit {movie.title} </Text>
+            <Text style={styles.label}>Title  </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Title"
+              onChangeText = { text => setTitle(text) }
+              value ={title}
+            />
+            <Text style={styles.label}>Description </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Title"
+              onChangeText = { text => setDescription(text) }
+              value ={description}
+            />
+            <Button onPress={ () => saveMovie() } title ="Save" />
         </View>
     );
 }
@@ -50,4 +71,15 @@ const styles = StyleSheet.create({
     color: "white",
     padding: 10,
   },
+  label:{
+    fontSize: 24,
+    color: '#fff',
+    padding: 10,
+  },
+  input:{
+    fontSize: 20,
+    backgroundColor: '#fff',
+    padding: 10,
+    margin: 10,
+  }
 });
