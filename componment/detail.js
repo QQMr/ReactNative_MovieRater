@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, View,Image, Button } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, View,Image, Button, Alert } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 
@@ -11,6 +11,26 @@ export default function Detail (props) {
 
     const rateClick = () => {
       console.log(highlight);
+      if(highlight > 0 && highlight <6)
+      {
+          const djangoUrls = (Platform.OS == "android" ? 
+          `http://192.168.0.101:8000/api/movies/${movie.id}/rate_movie/`
+          :`http://192.168.0.101:8000/api/movies/${movie.id}/`);
+          fetch(djangoUrls,{
+            method: 'POST',
+            headers: {
+              'Authorization': `Token 00899e358115a9ecd55a2fec3a88b74c28ed6076`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({stars: highlight})
+          })
+          .then( res=> res.json() )
+          .then( res => {
+            setHighlight(0);
+            Alert.alert("Rating", res.message);
+          })
+          .catch(error => Alert.alert("Error", error)) 
+      }
     }
 
     return (
