@@ -7,6 +7,11 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 export default function Detail (props) {
 
     const movie = props.navigation.getParam('movie')
+    const [ highlight,setHighlight] = useState(0);
+
+    const rateClick = () => {
+      console.log(highlight);
+    }
 
     return (
         <View style={styles.container}>
@@ -19,6 +24,17 @@ export default function Detail (props) {
                 <Text style={styles.white}>({movie.no_of_ratings})</Text>
            </View>
             <Text style={styles.description}>{movie.description} </Text>
+            <View style={{borderBottomColor:"white", borderBottomWidth: 4}} />
+            <Text style={styles.description}>Rate it</Text>
+            <View style={styles.starConatiner}>
+                <FontAwesomeIcon style={highlight > 0? styles.purple : styles.grey} icon={faStar} size={48} onPress ={ ()=> {setHighlight(1); console.log("1"); } }/>
+                <FontAwesomeIcon style={highlight > 1? styles.purple : styles.grey} icon={faStar} size={48} onPress ={ ()=> setHighlight(2)}/>
+                <FontAwesomeIcon style={highlight > 2? styles.purple : styles.grey} icon={faStar} size={48} onPress ={ ()=> setHighlight(3)}/>
+                <FontAwesomeIcon style={highlight > 3? styles.purple : styles.grey} icon={faStar} size={48} onPress ={ ()=> setHighlight(4)}/>
+                <FontAwesomeIcon style={highlight > 4? styles.purple : styles.grey} icon={faStar} size={48} onPress ={ ()=> setHighlight(5)}/>
+                <Text style={styles.white}>({movie.no_of_ratings})</Text>
+           </View>
+           <Button title="Rate" onPress={ ()=> rateClick() }></Button>
         </View>
     );
 }
@@ -75,5 +91,11 @@ const styles = StyleSheet.create({
   },
   white:{
       color: "white"
+  },
+  purple:{
+    color: "purple"
+  },
+  grey:{
+    color: "#ccc"
   }
 });
