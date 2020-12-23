@@ -12,25 +12,44 @@ export default function Edit (props) {
     const [description, setDescription] = useState(movie.description)
 
     const saveMovie = () =>{
-      
-      const djangoUrls = (Platform.OS == "android" ? 
-      `http://192.168.0.101:8000/api/movies/${movie.id}/`
-      :`http://192.168.0.101:8000/api/movies/${movie.id}/`);
-      fetch(djangoUrls,{
-        method: 'PUT',
-        headers: {
-          'Authorization': `Token 00899e358115a9ecd55a2fec3a88b74c28ed6076`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({title: title, description: description})
-      })
-      .then( res=> res.json() )
-      .then( movie => {
-        console.log(movie);
-        props.navigation.navigate('Detail',{movie: movie,title:movie.title})
-      })
-      .catch(error => console.log(error))
-
+      if( movie.id ){
+          const djangoUrls = (Platform.OS == "android" ? 
+          `http://192.168.0.101:8000/api/movies/${movie.id}/`
+          :`http://192.168.0.101:8000/api/movies/${movie.id}/`);
+          fetch(djangoUrls,{
+            method: 'PUT',
+            headers: {
+              'Authorization': `Token 00899e358115a9ecd55a2fec3a88b74c28ed6076`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({title: title, description: description})
+          })
+          .then( res=> res.json() )
+          .then( movie => {
+            console.log(movie);
+            props.navigation.navigate('Detail',{movie: movie,title:movie.title})
+          })
+          .catch(error => console.log(error))
+      }
+      else{
+        const djangoUrls = (Platform.OS == "android" ? 
+        `http://192.168.0.101:8000/api/movies/`
+        :`http://192.168.0.101:8000/api/movies/`);
+        fetch(djangoUrls,{
+          method: 'POST',
+          headers: {
+            'Authorization': `Token 00899e358115a9ecd55a2fec3a88b74c28ed6076`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({title: title, description: description})
+        })
+        .then( res=> res.json() )
+        .then( movie => {
+          console.log(movie);
+          props.navigation.navigate('MovieList')
+        })
+        .catch(error => console.log(error))
+      }
       //props.navigation.goBack();
     };
 
@@ -50,7 +69,7 @@ export default function Edit (props) {
               onChangeText = { text => setDescription(text) }
               value ={description}
             />
-            <Button onPress={ () => saveMovie() } title ="Save" />
+            <Button onPress={ () => saveMovie() } title = {movie.id ? "Edit": "Add"} />
         </View>
     );
 }
