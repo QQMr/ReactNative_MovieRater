@@ -84,7 +84,36 @@ Edit.navigationOptions = screenProps => (
     fontWeight: "bold",
     fontSize: 24,
   },
+  headerRight: () => {
+    return(
+      <Button title="Removie" color="#841584" 
+      onPress = {()=> removeClicked(screenProps)}
+      />
+    )
+  }
 })
+
+const removeClicked = (props) => {
+
+  const movie = props.navigation.getParam('movie');
+  console.log(movie);
+  const djangoUrls = (Platform.OS == "android" ? 
+          `http://192.168.0.101:8000/api/movies/${movie.id}/`
+          :`http://192.168.0.101:8000/api/movies/${movie.id}/`);
+          fetch(djangoUrls,{
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Token 00899e358115a9ecd55a2fec3a88b74c28ed6076`,
+              "Content-Type": "application/json"
+            },
+          })
+          .then( res=> res.json() )
+          .then( res => {
+            console.log(res);
+            props.navigation.navigate('MovieList');
+          })
+          .catch(error => console.log(error))
+}
 
 const styles = StyleSheet.create({
   container: {

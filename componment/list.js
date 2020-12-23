@@ -21,7 +21,7 @@ export default function MovieList (props) {
         .then( res=> res.json() )
         .then(jsonRes => setMovies(jsonRes))
         .catch(error => console.log(error))
-    },[])
+    })
     
     const movieclicked = (movie) =>{
         props.navigation.navigate('Detail',{movie: movie,title:movie.title})
