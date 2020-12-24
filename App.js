@@ -4,8 +4,10 @@ import Detail from "./componment/detail"
 import Edit from "./componment/edit"
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
+import Auth from './componment/auth';
 
 const AppNavigator = createStackNavigator({
+  Auth:{screen: Auth},
   MovieList: {screen: MovieList},
   Detail: {screen: Detail},
   Edit:{ screen: Edit }
