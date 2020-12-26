@@ -1,21 +1,41 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, View,Image, Button, AsyncStorage } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, View,Image, Button, AsyncStorage,TextInput, TouchableOpacity  } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { TextInput } from 'react-native-gesture-handler';
 
 export default function Auth(props) {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [regView, setRegView] = useState(false)
 
     useEffect(()=>{
         getData();
     },[])
 
     const auth = () =>{
-   
+      if(regView)
+      {
+        const djangoUrls = (Platform.OS == "android" ? 
+          `http://192.168.0.101:8000/api/users/`
+          :`http://192.168.0.101:8000/auth/`);
+          fetch(djangoUrls,{
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password})
+          })
+          .then( res=> res.json() )
+          .then( res => {
+            console.log(res.token);
+            setRegView(false);
+          })
+          .catch(error => console.log(error))
+
+      }
+      else{
           const djangoUrls = (Platform.OS == "android" ? 
           `http://192.168.0.101:8000/auth/`
           :`http://192.168.0.101:8000/auth/`);
@@ -33,7 +53,7 @@ export default function Auth(props) {
             props.navigation.navigate('MovieList')
           })
           .catch(error => console.log(error))
-      
+        }
       //props.navigation.goBack();
     };
 
@@ -44,6 +64,10 @@ export default function Auth(props) {
     const getData = async () =>{
         const token = await AsyncStorage.getItem("MR_TOKEN");
         if( token )  props.navigation.navigate('MovieList');
+    }
+
+    const toogleView =() =>{
+      setRegView(!regView);
     }
 
     return (
@@ -65,7 +89,13 @@ export default function Auth(props) {
               secureTextEntry ={true}
               autoCapitalize={"none"}
             />
-            <Button onPress={ () => auth() } title = "Login" />
+            <Button onPress={ () => auth() } title = {regView?"Regiser":"Login"} />
+            <TouchableOpacity onPress={()=> toogleView()}>
+              {regView?
+                <Text style={styles.viewStyle}>Already have an account? Go back to login</Text>:
+                <Text style={styles.viewStyle}>Don't have an account Register here.</Text>
+              }
+            </TouchableOpacity>
         </View>
     );
 }
@@ -137,5 +167,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 10,
     margin: 10,
+  },
+  viewStyle:{
+    color: "white",
+    fontSize: 20,
+    padding: 20,
   }
 });
