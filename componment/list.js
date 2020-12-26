@@ -1,30 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, View,Image,Button } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, View,Image,Button, AsyncStorage } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function MovieList (props) {
 
     //const [movies, setMovies] = useState([{id:100,title: "Rambo"},{id:200,title: "Predator"}]);
     const [movies, setMovies] = useState([]);
+    const [token, setToken] = useState(null);
 
+    
+    const getData = async () =>{
+      const tokenTmp = await AsyncStorage.getItem("MR_TOKEN");
+      setToken( tokenTmp);
+      
+      if(tokenTmp){
+        getMovie(tokenTmp);
+      }else{
+        //props.navigation.navigate("Auth")
+      }
+    }
+   
     useEffect(()=>{
-        const djangoUrls = (Platform.OS == "android" ? 
+      getData();
+    },[])
+    
+    const getMovie = (tokenArg) =>
+    {
+      const djangoUrls = (Platform.OS == "android" ? 
                             'http://192.168.0.101:8000/api/movies/'
                             :'http://192.168.0.101:8000/api/movies/');
         fetch(djangoUrls,{
             method: 'GET',
             headers: {
-                'Authorization': `Token 00899e358115a9ecd55a2fec3a88b74c28ed6076`
+                'Authorization': `Token ${tokenArg}`
             }
         })
         .then( res=> res.json() )
         .then(jsonRes => setMovies(jsonRes))
         .catch(error => console.log(error))
-    })
+    }
     
+
     const movieclicked = (movie) =>{
-        props.navigation.navigate('Detail',{movie: movie,title:movie.title})
+        props.navigation.navigate('Detail',{movie: movie,title:movie.title,token: token})
     }
 
     return (

@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { FlatList, Platform, StyleSheet, Text, View,Image, Button } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, View,Image, Button, AsyncStorage } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { TextInput } from 'react-native-gesture-handler';
@@ -10,28 +10,41 @@ export default function Auth(props) {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
+    useEffect(()=>{
+        getData();
+    },[])
+
     const auth = () =>{
    
-      //     const djangoUrls = (Platform.OS == "android" ? 
-      //     `http://192.168.0.101:8000/api/movies/${movie.id}/`
-      //     :`http://192.168.0.101:8000/api/movies/${movie.id}/`);
-      //     fetch(djangoUrls,{
-      //       method: 'PUT',
-      //       headers: {
-      //         'Authorization': `Token 00899e358115a9ecd55a2fec3a88b74c28ed6076`,
-      //         "Content-Type": "application/json"
-      //       },
-      //       body: JSON.stringify({title: title, description: description})
-      //     })
-      //     .then( res=> res.json() )
-      //     .then( movie => {
-      //       console.log(movie);
-      //       props.navigation.navigate('Detail',{movie: movie,title:movie.title})
-      //     })
-      //     .catch(error => console.log(error))
+          const djangoUrls = (Platform.OS == "android" ? 
+          `http://192.168.0.101:8000/auth/`
+          :`http://192.168.0.101:8000/auth/`);
+          fetch(djangoUrls,{
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password})
+          })
+          .then( res=> res.json() )
+          .then( res => {
+            console.log(res.token);
+            saveData(res.token);
+            props.navigation.navigate('MovieList')
+          })
+          .catch(error => console.log(error))
       
-      // props.navigation.goBack();
+      //props.navigation.goBack();
     };
+
+    const saveData = async (token) =>{
+        await AsyncStorage.setItem("MR_TOKEN",token)
+    }
+
+    const getData = async () =>{
+        const token = await AsyncStorage.getItem("MR_TOKEN");
+        if( token )  props.navigation.navigate('MovieList');
+    }
 
     return (
         <View style={styles.container}>            
@@ -41,6 +54,7 @@ export default function Auth(props) {
               placeholder="Username"
               onChangeText = { text => setUsername(text) }
               value ={username}
+              autoCapitalize={"none"}
             />
             <Text style={styles.label}>password </Text>
             <TextInput
@@ -48,6 +62,8 @@ export default function Auth(props) {
               placeholder="Password"
               onChangeText = { text => setPassword(text) }
               value ={password}
+              secureTextEntry ={true}
+              autoCapitalize={"none"}
             />
             <Button onPress={ () => auth() } title = "Login" />
         </View>
